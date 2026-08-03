@@ -1,6 +1,8 @@
 import { Geist, Geist_Mono } from 'next/font/google'
+import { Toaster } from 'sonner'
 
 import './globals.css'
+import { QCProvider } from '@/providers'
 import { cn } from '@/utils'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })
@@ -21,7 +23,12 @@ export default function RootLayout({
 			suppressHydrationWarning
 			className={cn('antialiased', fontMono.variable, 'font-sans', geist.variable)}
 		>
-			<body>{children}</body>
+			<body>
+				<QCProvider>
+					{children}
+					<Toaster position='top-right' />
+				</QCProvider>
+			</body>
 		</html>
 	)
 }
