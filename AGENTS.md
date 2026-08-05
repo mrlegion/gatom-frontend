@@ -1,95 +1,186 @@
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
-
-# Project Description
+# GATOM Frontend Project
 
 ## Overview
-This is a Next.js frontend template project using shadcn/ui component library. The application appears to be a web-based management system with authentication capabilities and API integration.
 
-## Key Features and Structure
+This is a Next.js 16 frontend application built with shadcn/ui components, implementing an administrative interface for managing users, positions, organizations, and subsidiaries. The project follows modern React patterns with TypeScript type safety and includes authentication, data fetching, and responsive UI components.
 
-### Technology Stack
-- **Framework**: Next.js 16.2.6 (React 19.2.4)
-- **UI Library**: shadcn/ui components
-- **State Management**: React Query (TanStack)
-- **Styling**: Tailwind CSS with tw-animate-css
-- **Authentication**: JWT-based authentication with token management
-- **HTTP Client**: Axios
+## Architecture
 
-### Project Structure
+### Core Components
+- **Next.js 16** with App Router
+- **shadcn/ui** component library for UI elements
+- **TypeScript** for type safety
+- **React Query** for state management and API data fetching
+- **Tailwind CSS** for styling
+- **Axios** for HTTP requests with authentication
+
+### Folder Structure
 ```
 src/
-├── api/                 # API client configuration and helpers
-│   ├── index.ts         # Exports interceptors and helpers
-│   ├── interceptors.api.ts  # Axios interceptors for auth and error handling
-│   └── helpers.api.ts   # API helper functions
-├── config/              # Configuration files
-│   ├── api.config.ts    # API URL and endpoint definitions
-│   └── url.config.ts    # URL configuration
-├── services/            # Service layer for business logic
-│   └── auth/            # Authentication services
-│       ├── auth-token.ts    # Token management (cookies)
-│       ├── auth.service.ts  # Authentication methods
-│       └── index.ts
-├── types/               # TypeScript type definitions
-│   ├── user/            # User-related types
-│   │   ├── user.types.ts
-│   │   └── index.ts
-│   └── auth/            # Authentication-related types
-│       ├── auth.types.ts
-│       └── index.ts
-├── components/          # UI Components (shadcn/ui)
-│   └── ui/              # Re-exported shadcn components
-└── hooks/               # Custom React hooks
+├── app/                    # Next.js App Router pages
+├── components/             # Reusable UI components
+├── hooks/                  # Custom React hooks
+├── services/               # Business logic and API service classes
+├── api/                    # HTTP client configuration
+├── config/                 # Configuration files
+├── types/                  # TypeScript type definitions
+├── providers/              # Context providers
+└── utils/                  # Utility functions
 ```
 
-### Core Functionality
+### Authentication Flow
+- JWT-based authentication with refresh tokens
+- Protected routes using Next.js middleware
+- Token storage in cookies
+- Automatic token refresh on 401 errors
 
-#### Authentication System
-- **Token Management**: Uses js-cookie for storing access tokens with domain-specific settings
-- **API Interceptors**: 
-  - Automatically attaches JWT tokens to authenticated requests
-  - Handles token refresh logic (incomplete in current implementation)
-  - Manages unauthorized responses (401 status or specific error messages)
-- **Endpoints**:
-  - Login, register, refresh, logout, update-password
-  - Organization management (CRUD operations)
-  - Position management (CRUD operations)
-  - Subsidiary management (CRUD with connection operations)
+## Key Features
 
-#### API Configuration
-The `api.config.ts` file defines a comprehensive URL structure with:
-- Authentication endpoints
-- Organization management endpoints
-- Position management endpoints  
-- Subsidiary management endpoints
+### Admin Dashboard
+- User management (CRUD operations)
+- Position management (CRUD operations)  
+- Organization management (CRUD operations)
+- Subsidiary management (CRUD operations)
 
-#### Type Definitions
-The project uses a consistent naming convention for TypeScript types:
-- **Interfaces**: Prefixed with `I` (e.g., `ILoginForm`, `IResponse`, `IUser`)
-- **Types**: Prefixed with `T` (e.g., `TRefreshResponse`, `TChangePasswordForm`)
+### Data Management
+- Data tables with sorting and filtering
+- Form handling for CRUD operations
+- Type-safe API interactions
 
-#### Components
-Uses shadcn/ui component library for UI elements, including:
-- Button
-- Input
-- Checkbox
-- Dropdown menu
-- Table
-- Tooltip
-- Breadcrumb
-- Sidebar
-- Sheet
-- Skeleton
+### UI Components
+- Responsive sidebar navigation
+- Breadcrumb navigation system
+- Data tables with selection capabilities
+- Authentication forms (login, register)
 
-### Key Files Summary
+## Services
 
-1. **Authentication Service** (`auth.service.ts`): Contains authentication logic but appears to be partially implemented
-2. **Token Management** (`auth-token.ts`): Handles cookie-based token storage and retrieval
-3. **API Interceptors** (`interceptors.api.ts`): Manages authenticated requests and error handling including unauthorized access scenarios
-4. **Type Definitions**: Consistent pattern of interfaces for object contracts and types for complex aliases
+### Authentication Service (`src/services/auth/`)
+- Handles login, registration, refresh, logout
+- Manages JWT tokens in cookies
+- Implements automatic token refresh
 
-This project appears to be a foundation for a business management application with user authentication, organization management, and API integration capabilities using modern Next.js patterns and shadcn/ui components.
+### Position Service (`src/services/positions/`)
+- Provides CRUD operations for position entities
+- Uses axiosWithAuth for authenticated requests
+- Follows REST API patterns
+
+## API Integration
+
+### HTTP Client Configuration (`src/api/interceptors.api.ts`)
+- Axios instance with authentication interceptor
+- Automatic token refresh on 401 errors
+- Error handling and retry logic
+- Request/response interceptors
+
+### API Endpoints (`src/config/api.config.ts`)
+- Auth endpoints: login, register, refresh, logout
+- Position endpoints: get all, create, update, delete
+- Organization endpoints: get all, create, update, delete
+- Subsidiary endpoints: get all, create, update, delete
+
+## Key Hooks
+
+### usePositionsList (`src/hooks/positions/usePositionsList.ts`)
+- Fetches all positions from API using React Query
+- Handles loading and error states
+- Provides data for position tables with 2-minute cache time
+
+### Authentication Hooks
+- `useLogin` - handles login form submission
+- Custom hooks for auth state management
+
+## Types
+
+### Position Types (`src/types/positions/position.types.ts`)
+```typescript
+interface IPosition {
+  id: string;
+  title: string;
+  isNonActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface IPositionCreate {
+  title: string;
+}
+
+interface IPositonResponse {
+  success: boolean;
+  position: IPosition;
+}
+
+type TPositionUpdate = Pick<IPosition, 'title' | 'isNonActive'>
+```
+
+### User Types (`src/types/user/user.types.ts`)
+```typescript
+interface IUser {
+  id: string;
+  email: string;
+  username: string;
+  passwordChangeAt: string;
+  inactive: boolean;
+  initial: boolean;
+  usedTwoFactor: boolean;
+}
+
+interface IUserTable extends IUser {
+  // Table-specific properties
+}
+```
+
+## Data Flow
+
+1. **Component** → **Hook** (e.g., `usePositionsList`)
+2. **Hook** → **Service** (e.g., `positionService.getAll()`)
+3. **Service** → **API Client** (`axiosWithAuth`)
+4. **API Client** → **Server**
+5. **Server Response** → **Component**
+
+## Security
+
+- All API requests use authenticated axios client
+- Automatic token refresh on 401 errors
+- Protected routes using Next.js middleware
+- JWT-based authentication with secure cookies
+
+## Styling
+
+- Tailwind CSS for styling
+- shadcn/ui components for consistent UI
+- Responsive design patterns
+- Component-level styling with Tailwind classes
+
+## Development Tools
+
+- TypeScript for type safety
+- React Query for state management
+- Next.js App Router for routing
+- ESLint and Prettier for code quality
+
+## Position Management Implementation Details
+
+### Service Layer (`src/services/positions/position.service.ts`)
+- Implements getAll() method for fetching all positions
+- Implements findById() for single position retrieval
+- Implements create(), update(), delete() methods
+- Uses axiosWithAuth for authenticated requests
+
+### Hook Layer (`src/hooks/positions/usePositionsList.ts`)
+- Implements React Query with queryKey: ['positions list']
+- Uses staleTime of 2 minutes for caching
+- Provides positions data, loading and error states
+
+### UI Components (`src/components/pages/positions/`)
+- PositionPage.tsx - Main position management page
+- columns.tsx - Table column definitions using react-table
+- Data table with selection capabilities and links to detail pages
+
+### Column Definitions (`src/components/pages/positions/columns.tsx`)
+- Select column for row selection
+- ID column
+- Title column with link to detail view
+- Deactivated status with badge indicators
+- Creation and update timestamps

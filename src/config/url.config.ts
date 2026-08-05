@@ -29,6 +29,16 @@ export const PUBLIC_URI = {
 			view: (id: string) => PUBLIC_URI.admin.users.root(`/${id}`),
 			create: () => PUBLIC_URI.admin.users.root('/create'),
 			edit: (id: string) => `${PUBLIC_URI.admin.users.view(id)}/edit`
+		},
+
+		// Должности
+		positions: {
+			root: (uri: string = '') => PUBLIC_URI.admin.root(`/positions${uri}`),
+
+			list: () => PUBLIC_URI.admin.positions.root(),
+			view: (id: string) => PUBLIC_URI.admin.positions.root(`/${id}`),
+			create: () => PUBLIC_URI.admin.positions.root('/create'),
+			edit: (id: string) => `${PUBLIC_URI.admin.positions.view(id)}/edit`
 		}
 	}
 }

@@ -5,7 +5,6 @@ import { saveTokenToStorage } from '@/services/auth'
 import { axiosClassic, axiosWithAuth } from '@/api'
 import type { IChangePasswordForm, ILoginForm, TLoginResponse, TRefreshResponse } from '@/types/auth'
 
-
 class AuthService {
 	/**
 	 * Вход в систему
