@@ -48,9 +48,9 @@ export function DataTable<TData, TValue>({ data, columns }: IDataTableProps<TDat
 
 	return (
 		<div>
-			<div className='overflow-hidden rounded-md border'>
+			<div className='relative w-full overflow-auto rounded-md border'>
 				<Table>
-					<TableHeader>
+					<TableHeader className='sticky top-0 z-10 bg-background'>
 						{table.getHeaderGroups().map(hg => (
 							<TableRow key={hg.id}>
 								{hg.headers.map(header => {

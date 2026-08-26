@@ -1,9 +1,7 @@
-export const positionQueriesKey = {
-	list: () => ['position list']
-}
-
-export const positionMutationKey = {
-	create: () => ['position create'],
-	update: (id: string) => ['position update', id],
-	delete: () => ['position delete']
+export const positionKey = {
+	all: ['positions'] as const,
+	list: () => [...positionKey.all, 'list'] as const,
+	create: () => [...positionKey.all, 'create'] as const,
+	update: (id: string) => [...positionKey.all, 'undate', id] as const,
+	delete: () => [...positionKey.all, 'delete'] as const
 }

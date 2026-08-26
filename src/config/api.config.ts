@@ -24,7 +24,8 @@ const API_URI = {
 		findBy: {
 			root: (uri: string = '') => API_URI.organizations.root(`/find-by${uri}`),
 			id: (id: string) => API_URI.organizations.findBy.root(`/id/${id}`),
-			title: (title: string) => API_URI.organizations.findBy.root(`/title/${title}`)
+			title: (title: string) => API_URI.organizations.findBy.root(`/title/${title}`),
+			ids: () => API_URI.organizations.findBy.root(`/ids`)
 		}
 	},
 

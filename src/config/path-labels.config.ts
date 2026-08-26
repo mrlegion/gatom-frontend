@@ -3,5 +3,8 @@ export const PATH_LABELS: Record<string, string> = {
 	dashboard: 'Панель управления',
 	users: 'Пользователи',
 	edit: 'Редактирование',
-	positions: 'Должности'
+	positions: 'Должности',
+	organizations: 'Организации',
+	dictionaries: 'Справочники',
+	subsidiaries: 'Подразделения'
 }

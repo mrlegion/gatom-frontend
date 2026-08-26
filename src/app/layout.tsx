@@ -3,7 +3,7 @@ import React from 'react'
 import { Toaster } from 'sonner'
 
 import './globals.css'
-import { QCProvider } from '@/providers'
+import { QCProvider, ThemeProvider } from '@/providers'
 import { cn } from '@/utils'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })

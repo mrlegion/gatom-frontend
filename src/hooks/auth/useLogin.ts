@@ -1,12 +1,12 @@
 'use client'
 
 import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 import { authService } from '@/services/auth'
 
+import { PUBLIC_URI } from '@/config'
 import { ILoginForm } from '@/types/auth'
 
 export function useLogin() {
@@ -21,6 +21,7 @@ export function useLogin() {
 			toast.info('Успешный вход', {
 				description: 'Вы успешно вошли в систему'
 			})
+			router.push(PUBLIC_URI.admin.home())
 		},
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		onError(error: any) {

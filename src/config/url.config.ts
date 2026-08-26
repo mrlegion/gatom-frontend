@@ -31,14 +31,31 @@ export const PUBLIC_URI = {
 			edit: (id: string) => `${PUBLIC_URI.admin.users.view(id)}/edit`
 		},
 
-		// Должности
-		positions: {
-			root: (uri: string = '') => PUBLIC_URI.admin.root(`/positions${uri}`),
+		// Справочники
+		dictionaries: {
+			root: (url: string = '') => PUBLIC_URI.admin.root(`/dictionaries${url}`),
 
-			list: () => PUBLIC_URI.admin.positions.root(),
-			view: (id: string) => PUBLIC_URI.admin.positions.root(`/${id}`),
-			create: () => PUBLIC_URI.admin.positions.root('/create'),
-			edit: (id: string) => `${PUBLIC_URI.admin.positions.view(id)}/edit`
+			// Должности
+			positions: {
+				root: (uri: string = '') => PUBLIC_URI.admin.dictionaries.root(`/positions${uri}`),
+
+				list: () => PUBLIC_URI.admin.dictionaries.positions.root()
+			},
+
+			// Организации
+			organizations: {
+				root: (uri: string = '') => PUBLIC_URI.admin.dictionaries.root(`/organizations${uri}`),
+
+				list: () => PUBLIC_URI.admin.dictionaries.organizations.root(),
+				view: (id: string) => PUBLIC_URI.admin.dictionaries.organizations.root(`/${id}`)
+			},
+
+			// Подразделения
+			subsidiaries: {
+				root: (uri: string = '') => PUBLIC_URI.admin.dictionaries.root(`/subsidiaries${uri}`),
+
+				list: () => PUBLIC_URI.admin.dictionaries.subsidiaries.root()
+			}
 		}
 	}
 }
