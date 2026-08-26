@@ -1,123 +1,138 @@
-# GATOM Frontend
+# GATOM Admin Dashboard
 
-Frontend application for GATOM management system built with Next.js 14 and shadcn/ui components.
+A modern administrative interface built with Next.js 16 and shadcn/ui components for managing users, positions, organizations, and subsidiaries.
 
 ## Project Overview
 
-This is a Next.js 14 frontend application implementing an administrative interface for managing users, positions, organizations, and subsidiaries. The project follows modern React patterns with TypeScript type safety and includes authentication, data fetching, and responsive UI components.
+This is a comprehensive admin dashboard application designed to manage organizational data structures. The system provides full CRUD operations for users, positions, organizations, and subsidiaries with a secure authentication system and responsive UI.
 
 ## Key Features
 
-- **Admin Dashboard**: Complete administrative interface
-- **User Management**: Full CRUD operations for users
-- **Position Management**: CRUD operations with data tables
-- **Organization Management**: Hierarchical organization structure
-- **Subsidiary Management**: Related entities management
-- **Authentication System**: Secure login and token management
-- **Responsive UI**: Mobile-friendly interface using shadcn/ui components
+### Authentication System
+- JWT-based authentication with refresh tokens
+- Protected routes via Next.js middleware
+- Secure token storage in cookies
+- Automatic token refresh on 401 errors
+- Login and registration functionality
 
-## Technology Stack
+### Data Management
+- User management with full CRUD operations
+- Position management system with data tables
+- Organization hierarchy management
+- Subsidiary relationships management
+- Responsive UI using shadcn/ui components
 
-- **Next.js 14** with App Router
-- **shadcn/ui** component library for UI elements
-- **TypeScript** for type safety
-- **React Query** for state management and API data fetching
-- **Tailwind CSS** for styling
-- **Axios** for HTTP requests with authentication
+### Technical Architecture
+- Next.js App Router with TypeScript
+- Component-based architecture using shadcn/ui
+- Service layer pattern for API interactions
+- Custom hooks for data fetching and business logic
+- Context providers for global state management
+- React Query for API data fetching and caching
+- Type-safe API interactions using TypeScript interfaces
 
 ## Project Structure
 
 ```
 src/
-├── app/                    # Next.js App Router pages
-├── components/             # Reusable UI components
-├── hooks/                  # Custom React hooks
-├── services/               # Business logic and API service classes
-├── api/                    # HTTP client configuration
-├── config/                 # Configuration files
-├── types/                  # TypeScript type definitions
-├── providers/              # Context providers
-└── utils/                  # Utility functions
+├── app/                 # Next.js App Router pages
+├── components/          # Reusable UI components
+├── services/            # Business logic and API service classes
+├── hooks/               # Custom React hooks for data fetching
+├── api/                 # API configuration and interceptors
+├── types/               # TypeScript interfaces and types
+├── config/              # Configuration files
+├── providers/           # Context providers
+└── utils/               # Utility functions
 ```
 
-## Getting Started
+## Core Components
+
+### Admin Interface
+- User management dashboard with CRUD operations
+- Position management system 
+- Organization and subsidiary management
+- Responsive sidebar navigation with breadcrumb support
+
+### Data Tables
+- Custom DataTable component with sorting and filtering
+- Selection capabilities for rows
+- Column definitions with specific cell rendering
+
+### Authentication Forms
+- Login form with validation
+- Auth page layout with branding
+- Protected route handling
+
+## API Endpoints
+
+### Position Service Endpoints
+- `GET /api/positions` - Get all positions
+- `POST /api/positions` - Create new position
+- `PUT /api/positions/:id` - Update position
+- `DELETE /api/positions/:id` - Delete position
+
+### Authentication Endpoints
+- `POST /api/auth/login` - User login
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/refresh` - Token refresh
+- `POST /api/auth/logout` - User logout
+
+## Development Setup
 
 1. Install dependencies:
 ```bash
 npm install
 ```
 
-2. Run the development server:
+2. Set up environment variables in `.env` file:
+```env
+SERVER_URL=http://localhost:3000
+APP_DOMAIN=localhost
+```
+
+3. Run the development server:
 ```bash
 npm run dev
 ```
 
-3. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) to view the application
 
-## Environment Variables
+## Production Build
 
-Create a `.env.local` file in the root directory with the following variables:
-
-```
-SERVER_URL=http://localhost:8080
-APP_DOMAIN=localhost
+To build for production:
+```bash
+npm run build
 ```
 
-## Documentation
+To start the production server:
+```bash
+npm run start
+```
 
-- **[Project Structure](PROJECT_STRUCTURE.md)**: Detailed overview of project structure and components
-- **[Agents Documentation](agents.md)**: Technical documentation about the project architecture
-- **[Claude Project Docs](claude.md)**: Claude-specific project documentation
+## Security Features
 
-## Key Components
+- JWT-based authentication with secure token handling
+- Protected routes and middleware
+- Axios interceptors for authenticated requests
+- Secure cookie configuration
+- Token management best practices
 
-### Authentication
-- JWT-based authentication with refresh tokens
-- Protected routes using Next.js middleware
-- Token storage in cookies
-- Automatic token refresh on 401 errors
+## Responsive Design
 
-### Data Management
-- Data tables with sorting and filtering capabilities
-- Form handling for CRUD operations
-- Type-safe API interactions using React Query
+The application uses shadcn/ui components to provide a responsive interface that works well on:
+- Desktop browsers
+- Tablets
+- Mobile devices
 
-### UI Components
-- Responsive sidebar navigation
-- Breadcrumb navigation system
-- Data tables with selection capabilities
-- Authentication forms (login, register)
+## Contributing
 
-## Services
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Position Service (`src/services/positions/position.service.ts`)
-- Provides CRUD operations for position entities
-- Uses axiosWithAuth for authenticated requests
-- Follows REST API patterns
+## License
 
-### Authentication Service (`src/services/auth/`)
-- Handles login, registration, refresh, logout
-- Manages JWT tokens in cookies
-- Implements automatic token refresh
-
-## API Integration
-
-### HTTP Client Configuration (`src/api/interceptors.api.ts`)
-- Axios instance with authentication interceptor
-- Automatic token refresh on 401 errors
-- Error handling and retry logic
-- Request/response interceptors
-
-## Development Tools
-
-- TypeScript for type safety
-- React Query for state management
-- Next.js App Router for routing
-- ESLint and Prettier for code quality
-
-## Security
-
-- All API requests use authenticated axios client
-- Automatic token refresh on 401 errors
-- Protected routes using Next.js middleware
-- JWT-based authentication with secure cookies
+This project is licensed under the MIT License.
