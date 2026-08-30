@@ -48,6 +48,15 @@ src/
 
 ## Core Components
 
+### Env template
+
+``` dotenv
+APP_ENV="development | production"  # how app run
+APP_URL="http://localhost:3000"     # your host site
+APP_DOMAIN="localhost"              # domain app
+SERVER_URL="http://localhost:5000"  # your server api url
+```
+
 ### Admin Interface
 - User management dashboard with CRUD operations
 - Position management system 
