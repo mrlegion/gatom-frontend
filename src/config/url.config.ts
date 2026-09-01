@@ -15,7 +15,7 @@ export const PUBLIC_URI = {
 		root: (uri: string = '') => PUBLIC_URI.root(`/admin${uri}`),
 
 		// мы делаем для каждого модуля свои объекты URI
-		home: () => PUBLIC_URI.admin.root('/'),
+		home: () => PUBLIC_URI.admin.root(),
 
 		// Панель управления
 		dashboard: {
