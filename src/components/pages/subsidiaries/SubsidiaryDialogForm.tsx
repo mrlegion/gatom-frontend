@@ -1,8 +1,8 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ChevronDownIcon, Plus, PlusIcon, Save, XIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { ChevronDownIcon, PlusIcon, Save, XIcon } from 'lucide-react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 
 import {
@@ -41,81 +41,91 @@ import {
 } from '@/components/ui'
 
 import { useGetOrganizations } from '@/hooks/organizations'
-import { useCreateSubsidiary } from '@/hooks/subsidiaries'
 
-import { CreateSubsidiarySchema, type TCreateSubsidiary } from '@/schemas/subsidiaries'
+import { SubsidiaryFormValue, SubsidiarySchema } from '@/schemas/subsidiaries'
 
-export function SubsidiaryDialogCreate() {
+interface SubsidiaryDialogFormProps {
+	mode: 'create' | 'edit'
+	defaultValues?: Partial<SubsidiaryFormValue>
+	onSubmit: (values: SubsidiaryFormValue) => Promise<void>
+	isPending: boolean
+	dialogTrigger: ReactNode
+}
+
+// const emptySubsidiaryValues: SubsidiaryFormValue = {
+// 	title: '',
+// 	organizationId: '',
+// 	address: '',
+// 	phones: [{ value: '' }],
+// 	emails: [{ value: '' }]
+// }
+
+export function SubsidiaryDialogForm({
+	mode,
+	defaultValues,
+	onSubmit,
+	isPending,
+	dialogTrigger
+}: SubsidiaryDialogFormProps) {
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 	const [isPhoneOpen, setIsPhoneOpen] = useState<boolean>(false)
 	const [isEmailOpen, setIsEmailOpen] = useState<boolean>(false)
 
-	const { createSubsidiary, isCreateSubsidiaryPending } = useCreateSubsidiary()
 	const { organizations } = useGetOrganizations()
 
+	const emptySubsidiaryValues = useMemo<SubsidiaryFormValue>(
+		() => ({
+			title: '',
+			organizationId: '',
+			address: '',
+			phones: [],
+			emails: []
+		}),
+		[]
+	)
+
 	const {
-		register,
 		control,
 		reset,
 		handleSubmit,
 		formState: { errors }
-	} = useForm<TCreateSubsidiary>({
-		resolver: zodResolver(CreateSubsidiarySchema),
-		defaultValues: {
-			title: '',
-			address: '',
-			organizationId: '',
-			phones: [],
-			emails: []
-		}
+	} = useForm<SubsidiaryFormValue>({
+		resolver: zodResolver(SubsidiarySchema),
+		defaultValues: { ...emptySubsidiaryValues, ...defaultValues }
 	})
 
 	const phoneFields = useFieldArray({ control, name: 'phones' })
 	const emailFields = useFieldArray({ control, name: 'emails' })
 
 	useEffect(() => {
-		if (!isOpen) reset()
-	}, [reset, isOpen])
+		if (!isOpen) reset({ ...emptySubsidiaryValues, ...defaultValues })
+	}, [reset, isOpen, defaultValues, emptySubsidiaryValues])
 
-	const onHandleSubmit = async (value: TCreateSubsidiary) => {
-		createSubsidiary(
-			{
-				title: value.title,
-				address: value.address,
-				organizationId: value.organizationId,
-				phones: value.phones.map(p => p.value),
-				emails: value.emails.map(e => e.value)
-			},
-			{
-				onSuccess: () => {
-					setIsOpen(false)
-					reset()
-				}
-			}
-		)
+	const onHandleSubmit = async (values: SubsidiaryFormValue) => {
+		try {
+			await onSubmit(values)
+			setIsOpen(false)
+			reset({ ...emptySubsidiaryValues, ...defaultValues })
+		} catch {}
 	}
 
 	const handleOpenChange = (nextOpen: boolean) => {
-		if (!nextOpen && isCreateSubsidiaryPending) return
+		if (!nextOpen && isPending) return
 		setIsOpen(nextOpen)
 	}
 
 	return (
 		<Dialog open={isOpen} onOpenChange={handleOpenChange}>
 			<div className='flex'>
-				<DialogTrigger asChild>
-					<Button variant='outline' className='pr-5 pl-5'>
-						<Plus className='mr-2 h-4 w-4' />
-						Создать подразделение
-					</Button>
-				</DialogTrigger>
+				<DialogTrigger asChild>{dialogTrigger}</DialogTrigger>
 			</div>
 			<DialogContent className='sm:max-w-sm'>
 				<DialogHeader>
-					<DialogTitle>Добавление подразделения</DialogTitle>
+					<DialogTitle>{mode === 'create' ? 'Создать подразделение' : 'Изменить подразделение'}</DialogTitle>
 					<DialogDescription>
-						Вы можете добавить новое подразделение в систему. Нажмите <strong>&quot;Сохранить&quot;</strong> когда
-						закончите.
+						{mode === 'create'
+							? `Вы можете добавить новое подразделение в систему. Нажмите Сохранить когда закончите.`
+							: `Изменение подразделения: ${defaultValues?.title}. Нажмите Сохранить когда закончите.`}
 					</DialogDescription>
 				</DialogHeader>
 
@@ -135,7 +145,7 @@ export function SubsidiaryDialogCreate() {
 											data-invalid={fieldState.invalid}
 											placeholder='Введите наименование подразделения'
 											autoComplete='off'
-											disabled={isCreateSubsidiaryPending}
+											disabled={isPending}
 										/>
 										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
 									</Field>
@@ -343,17 +353,12 @@ export function SubsidiaryDialogCreate() {
 
 				<DialogFooter>
 					<DialogClose asChild>
-						<Button variant='destructive' className='pr-5 pl-5' disabled={isCreateSubsidiaryPending}>
+						<Button variant='destructive' className='pr-5 pl-5' disabled={isPending}>
 							<XIcon /> Отмена
 						</Button>
 					</DialogClose>
-					<Button
-						type='submit'
-						form='subsidiary-create-form'
-						disabled={isCreateSubsidiaryPending}
-						className='pr-5 pl-5'
-					>
-						<Save /> {isCreateSubsidiaryPending ? 'Сохранение...' : 'Сохранить'}
+					<Button type='submit' form='subsidiary-create-form' disabled={isPending} className='pr-5 pl-5'>
+						<Save /> {isPending ? 'Сохранение...' : 'Сохранить'}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

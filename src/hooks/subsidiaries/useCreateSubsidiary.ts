@@ -12,14 +12,7 @@ import type { TCreateSubsidiary, TSubsidiaryResponse } from '@/types/subsidiarie
 export function useCreateSubsidiary() {
 	const queryClient = useQueryClient()
 
-	const {
-		mutate: createSubsidiary,
-		isPending: isCreateSubsidiaryPending,
-		isError: isCreateSubsidiaryError,
-		isSuccess: isCreateSubsidiarySuccess,
-		error: createSubsidiaryError,
-		reset: resetCreateSubsidiary
-	} = useMutation({
+	const mutation = useMutation({
 		mutationKey: subsidiaryKey.create(),
 		mutationFn: async (data: TCreateSubsidiary) => await subsidiaryService.create(data),
 		onSuccess: async (data: TSubsidiaryResponse) => {
@@ -34,11 +27,11 @@ export function useCreateSubsidiary() {
 	})
 
 	return {
-		createSubsidiary,
-		isCreateSubsidiaryPending,
-		isCreateSubsidiaryError,
-		isCreateSubsidiarySuccess,
-		createSubsidiaryError,
-		resetCreateSubsidiary
+		createSubsidiary: mutation.mutateAsync,
+		isCreateSubsidiaryPending: mutation.isPending,
+		isCreateSubsidiaryError: mutation.isError,
+		isCreateSubsidiarySuccess: mutation.isSuccess,
+		createSubsidiaryError: mutation.error,
+		resetCreateSubsidiary: mutation.reset
 	}
 }

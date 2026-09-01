@@ -42,6 +42,13 @@ export type TConnectSubsidiaryToOrganizationResponse = {
 export type TSubsidiaryResponse = Omit<ISubsidiary, 'createdAt' | 'updatedAt'>
 
 /**
+ * Ответ обновления записи
+ */
+export type TUpdateSubsidiaryResponse = {
+	data: TSubsidiaryResponse
+}
+
+/**
  * Ответ создания записи подразделения
  */
 export type TCreateSubsidiaryResponse = {

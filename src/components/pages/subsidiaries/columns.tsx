@@ -1,19 +1,30 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, SquareArrowOutUpRight, Trash2Icon } from 'lucide-react'
+import { ArrowUpDown, Edit, SquareArrowOutUpRight } from 'lucide-react'
 import Link from 'next/link'
 
-import { AlertDialogDelete, AlertDialogQuestion, Button, Checkbox } from '@/components/ui'
-
-import { subsidiaryKey } from '@/config/queries'
+import { SubsidiaryDialogForm } from '@/components/pages/subsidiaries/SubsidiaryDialogForm'
+import { AlertDialogDelete, Button, ButtonDialogTrigger, Checkbox } from '@/components/ui'
 
 import { PUBLIC_URI } from '@/config'
+import { SubsidiaryFormValue } from '@/schemas/subsidiaries'
 import type { TSubsidiaryTable } from '@/types/subsidiaries'
+
+export interface SubsidiaryEditValues {
+	id: string
+	values: SubsidiaryFormValue
+}
 
 interface ISubsidiaryColumnsProps {
 	onDelete: (id: string) => void
+	onEdit: ({ id, values }: SubsidiaryEditValues) => Promise<void>
+	isEditPending: boolean
 }
 
-export const getSubsidiaryColumns = ({ onDelete }: ISubsidiaryColumnsProps): ColumnDef<TSubsidiaryTable>[] => [
+export const getSubsidiaryColumns = ({
+	onDelete,
+	onEdit,
+	isEditPending
+}: ISubsidiaryColumnsProps): ColumnDef<TSubsidiaryTable>[] => [
 	{
 		id: 'select',
 		size: 40,
@@ -87,8 +98,29 @@ export const getSubsidiaryColumns = ({ onDelete }: ISubsidiaryColumnsProps): Col
 		size: 85,
 		cell: ({ row }) => {
 			const subsidiary = row.original
+
+			const onHandlerEditSubmit = async (values: SubsidiaryFormValue) => {
+				await onEdit({
+					id: subsidiary.id,
+					values
+				})
+			}
+
 			return (
-				<div className='flex justify-end'>
+				<div className='flex justify-end gap-2'>
+					<SubsidiaryDialogForm
+						mode='edit'
+						onSubmit={onHandlerEditSubmit}
+						isPending={isEditPending}
+						defaultValues={{
+							title: subsidiary.title,
+							address: subsidiary.address,
+							organizationId: subsidiary.organizationId,
+							phones: subsidiary.phones.map(p => ({ value: p })),
+							emails: subsidiary.emails.map(e => ({ value: e }))
+						}}
+						dialogTrigger={<ButtonDialogTrigger icon={<Edit className='h-4 w-4' />} variant='outline' />}
+					/>
 					<AlertDialogDelete
 						onlyIcon
 						id={subsidiary.id}

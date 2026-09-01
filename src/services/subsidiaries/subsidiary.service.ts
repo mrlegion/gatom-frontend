@@ -11,7 +11,8 @@ import type {
 	TSubsidiaryFindByOrganizationResponse,
 	TSubsidiaryFindByResponse,
 	TSubsidiaryResponse,
-	TUpdateSubsidiary
+	TUpdateSubsidiary,
+	TUpdateSubsidiaryResponse
 } from '@/types/subsidiaries'
 
 class SubsidiaryService {
@@ -106,13 +107,13 @@ class SubsidiaryService {
 	 * @throws {AxiosError} Если запрос завершился ошибкой
 	 */
 	public async update(id: string, data: TUpdateSubsidiary) {
-		const { data: response } = await axiosWithAuth<TSubsidiaryResponse>({
+		const { data: response } = await axiosWithAuth<TUpdateSubsidiaryResponse>({
 			url: API_URI.subsidiaries.update(id),
 			method: 'PUT',
 			data
 		})
 
-		return response
+		return response?.data
 	}
 
 	/**
