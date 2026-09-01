@@ -1,3 +1,5 @@
 export * from './AdminSidebarContent'
 export * from './AdminSidebarHeader'
 export * from './AdminSidebar'
+export * from './AdminSidebarNavMenu'
+export * from './AdminSidebarDictionaryMenu'
