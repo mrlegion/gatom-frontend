@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import { positionMutationKey, positionQueriesKey } from '@/config/queries'
+import { positionKey } from '@/config/queries'
 
 import { positionService } from '@/services/positions'
 
@@ -11,10 +11,10 @@ export function usePositionCreate() {
 	const queryClient = useQueryClient()
 
 	const { mutate: createPosition, isPending: isCreatePositionPending } = useMutation({
-		mutationKey: positionMutationKey.create(),
+		mutationKey: positionKey.create(),
 		mutationFn: async (data: IPositionCreate) => await positionService.create(data),
 		onSuccess: async (data: IPositonResponse) => {
-			await queryClient.invalidateQueries({ queryKey: positionQueriesKey.list() })
+			await queryClient.invalidateQueries({ queryKey: positionKey.list() })
 			toast.success(`Должность ${data.position.title} успешно создана`)
 		},
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any

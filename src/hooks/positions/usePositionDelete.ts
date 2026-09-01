@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import { positionMutationKey, positionQueriesKey } from '@/config/queries'
+import { positionKey } from '@/config/queries'
 
 import { positionService } from '@/services/positions'
 
@@ -9,11 +9,11 @@ export const usePositionDelete = () => {
 	const queryClient = useQueryClient()
 
 	const { mutate: deletePosition, isPending: isDeletePending } = useMutation({
-		mutationKey: positionMutationKey.delete(),
+		mutationKey: positionKey.delete(),
 		mutationFn: async (id: string) => await positionService.delete(id),
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: positionQueriesKey.list()
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: positionKey.list()
 			})
 
 			toast.success('Успешное удаление', {

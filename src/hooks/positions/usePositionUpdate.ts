@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import { positionMutationKey, positionQueriesKey } from '@/config/queries'
-
+import { positionKey } from '@/config/queries'
 
 import { positionService } from '@/services/positions'
 
@@ -12,11 +11,11 @@ export const usePositionUpdate = (id: string) => {
 	const queryClient = useQueryClient()
 
 	const { mutate: updatePosition, isPending: isUpdatePending } = useMutation({
-		mutationKey: positionMutationKey.update(id),
+		mutationKey: positionKey.update(id),
 		mutationFn: async (data: TPositionUpdate) => await positionService.update(id, data),
-		onSuccess(data) {
-			queryClient.invalidateQueries({
-				queryKey: positionQueriesKey.list()
+		onSuccess: async data => {
+			await queryClient.invalidateQueries({
+				queryKey: positionKey.list()
 			})
 
 			toast.success('Успешное обновление', {
