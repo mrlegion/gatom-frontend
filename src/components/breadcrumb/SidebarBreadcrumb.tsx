@@ -16,11 +16,6 @@ import { useBreadcrumbOverride } from '@/hooks/breadcrumb'
 
 import { PATH_LABELS } from '@/config'
 
-export interface IBreadcrumbItem {
-	title?: string
-	href?: string
-}
-
 export function SidebarBreadcrumb() {
 	const pathname = usePathname()
 	const { overrides } = useBreadcrumbOverride()
@@ -29,8 +24,6 @@ export function SidebarBreadcrumb() {
 	const crumbs = segments.map((segment, i) => {
 		const href = '/' + segments.slice(0, i + 1).join('/')
 		const title = overrides[href] ?? PATH_LABELS[segment] ?? decodeURIComponent(segment)
-		console.log('href: ', href)
-		console.log('overrides: ', overrides)
 		return { title, href }
 	})
 
